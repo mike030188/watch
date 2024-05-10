@@ -17,9 +17,10 @@ import { DatabaseModule } from './database/database.module';
 			uploads: false,
 			autoSchemaFile: true,
 		}),
-		ComponentsModule,
+		ComponentsModule, // asosiy mantiqlar shuyerga
 		DatabaseModule, // bu faqat 1ta iwga tuwvoliw un alohida qilindi
 	],
+	// quyidagi mantiqlar serverimiz iwlayotganini TEST qiliw uchungina kk holos
 	controllers: [AppController],
 	providers: [AppService, AppResolver],
 })
