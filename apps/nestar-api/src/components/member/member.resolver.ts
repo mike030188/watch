@@ -8,7 +8,7 @@ import { Member } from '../../libs/dto/member/member';
 export class MemberResolver {
 	constructor(private readonly memberService: MemberService) {}
 
-	@Mutation(() => Member)
+	@Mutation(() => Member) // GraphQL ham 'Member'ni qaytariwi kk
 	@UsePipes(ValidationPipe)
 	public async signup(@Args('input') input: MemberInput): Promise<Member> {
 		// vaqtinchalik try/catch dan foydalanib handle qilamiz => future global handling
@@ -22,12 +22,12 @@ export class MemberResolver {
 		}
 	}
 
-	@Mutation(() => String)
+	@Mutation(() => Member) // GraphQL ham 'Member'ni qaytariwi kk
 	@UsePipes(ValidationPipe)
-	public async login(@Args('input') input: LoginInput): Promise<string> {
+	public async login(@Args('input') input: LoginInput): Promise<Member> {
 		try {
 			console.log('Mutation: login');
-			return this.memberService.login();
+			return this.memberService.login(input);
 		} catch (err) {
 			console.log('Error, signup:', err);
 			throw new InternalServerErrorException(err);
