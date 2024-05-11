@@ -3,7 +3,7 @@ import { IsNotEmpty, IsOptional, Length } from 'class-validator';
 import { MemberAuthType, MemberType } from '../../enums/member.enum';
 
 /**SIGNUP **/
-@InputType()
+@InputType() // FrtEnd => Backend sending data(type)
 export class MemberInput {
 	@IsNotEmpty()
 	@Length(3, 12)

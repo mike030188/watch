@@ -5,7 +5,7 @@ export enum MemberType {
 	AGENT = 'AGENT',
 	ADMIN = 'ADMIN',
 }
-// BU ts Enumlarimizni 'GraphQL'da iwlata oliwimiz un mantiq...
+// BU ts Enumlarimizni 'GraphQL'da iwlata oliwimiz un mantiq...('GraphQL'ga registratsiya qivoldik)
 registerEnumType(MemberType, {
 	name: 'MemberType',
 });
