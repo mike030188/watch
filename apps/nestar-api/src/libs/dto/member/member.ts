@@ -7,7 +7,7 @@ export class Member {
 	@Field(() => String)
 	_id: ObjectId; // buning type mongoose.dan keladi
 
-	@Field(() => MemberType)
+	@Field(() => MemberType) // GraphQL un
 	memberType: MemberType;
 
 	@Field(() => MemberStatus)
@@ -16,13 +16,13 @@ export class Member {
 	@Field(() => MemberAuthType)
 	memberAuthType: MemberAuthType;
 
-	@Field(() => String)
+	@Field(() => String) // Typescript un
 	memberPhone: string;
 
 	@Field(() => String)
 	memberNick: string;
 
-	memberPassword?: string;
+	memberPassword?: string; // Client.ga korinmasligi un "security"
 
 	@Field(() => String, { nullable: true })
 	memberFullName?: string;

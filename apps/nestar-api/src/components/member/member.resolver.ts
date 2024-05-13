@@ -9,7 +9,7 @@ export class MemberResolver {
 	constructor(private readonly memberService: MemberService) {}
 
 	@Mutation(() => Member) // GraphQL ham 'Member'ni qaytariwi kk
-	@UsePipes(ValidationPipe)
+	// @UsePipes(ValidationPipe) // method type pipe-validation => switch to GlobalPipe-validation(main.ts)
 	public async signup(@Args('input') input: MemberInput): Promise<Member> {
 		// vaqtinchalik try/catch dan foydalanib handle qilamiz => future global handling
 		try {
@@ -23,7 +23,7 @@ export class MemberResolver {
 	}
 
 	@Mutation(() => Member) // GraphQL ham 'Member'ni qaytariwi kk
-	@UsePipes(ValidationPipe)
+	// @UsePipes(ValidationPipe) // method type pipe-validation
 	public async login(@Args('input') input: LoginInput): Promise<Member> {
 		try {
 			console.log('Mutation: login');
