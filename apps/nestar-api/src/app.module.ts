@@ -7,6 +7,7 @@ import { ApolloDriver } from '@nestjs/apollo';
 import { AppResolver } from './app.resolver';
 import { ComponentsModule } from './components/components.module';
 import { DatabaseModule } from './database/database.module';
+import { T } from './libs/types/common';
 
 @Module({
 	imports: [
@@ -16,6 +17,18 @@ import { DatabaseModule } from './database/database.module';
 			playground: true,
 			uploads: false,
 			autoSchemaFile: true,
+			formatError: (error: T) => {
+				// console.log('error:', error);
+				const graphQLFormattedError = {
+					// code: 'ERROR CODE', // doim ham status code.ni korsatmedi wunga
+					code: error?.extensions.code,
+					// message: 'ERROR MESSAGE', // buni ham standard korinishida yozvolamiz
+					message:
+						error?.extensions?.exception?.response?.message || error?.extensions?.response?.message || error?.message,
+				};
+				console.log('GRAPHQL GLOBAL ERR:', graphQLFormattedError);
+				return graphQLFormattedError; // server qotip qolmaslik un return qiliw kk
+			},
 		}),
 		ComponentsModule, // asosiy mantiqlar shuyerga
 		DatabaseModule, // bu faqat 1ta iwga tuwvoliw un alohida qilindi

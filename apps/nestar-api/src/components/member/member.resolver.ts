@@ -12,26 +12,26 @@ export class MemberResolver {
 	// @UsePipes(ValidationPipe) // method type pipe-validation => switch to GlobalPipe-validation(main.ts)
 	public async signup(@Args('input') input: MemberInput): Promise<Member> {
 		// vaqtinchalik try/catch dan foydalanib handle qilamiz => future global handling
-		try {
-			console.log('Mutation: signup');
-			console.log('input:', input);
-			return await this.memberService.signup(input);
-		} catch (err) {
-			console.log('Error, signup:', err);
-			throw new InternalServerErrorException(err);
-		}
+		// try {
+		console.log('Mutation: signup');
+		console.log('input:', input);
+		return await this.memberService.signup(input);
+		// } catch (err) {
+		// 	console.log('Error, signup:', err);
+		// 	throw new InternalServerErrorException(err);
+		// }
 	}
 
 	@Mutation(() => Member) // GraphQL ham 'Member'ni qaytariwi kk
 	// @UsePipes(ValidationPipe) // method type pipe-validation
 	public async login(@Args('input') input: LoginInput): Promise<Member> {
-		try {
-			console.log('Mutation: login');
-			return this.memberService.login(input);
-		} catch (err) {
-			console.log('Error, signup:', err);
-			throw new InternalServerErrorException(err);
-		}
+		// try {
+		console.log('Mutation: login');
+		return this.memberService.login(input);
+		// } catch (err) {
+		// 	console.log('Error, signup:', err);
+		// 	throw new InternalServerErrorException(err);
+		// }
 	}
 
 	@Mutation(() => String)
