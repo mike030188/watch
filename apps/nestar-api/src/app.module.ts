@@ -24,7 +24,7 @@ import { T } from './libs/types/common';
 					code: error?.extensions.code,
 					// message: 'ERROR MESSAGE', // buni ham standard korinishida yozvolamiz
 					message:
-						error?.extensions?.exception?.response?.message || error?.extensions?.response?.message || error?.message,
+						error?.extensions?.exception?.response?.message || error?.extensions?.response?.message || error?.message, // server || pipe || umumiy
 				};
 				console.log('GRAPHQL GLOBAL ERR:', graphQLFormattedError);
 				return graphQLFormattedError; // server qotip qolmaslik un return qiliw kk

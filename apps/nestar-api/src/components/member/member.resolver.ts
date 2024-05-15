@@ -14,7 +14,7 @@ export class MemberResolver {
 		// vaqtinchalik try/catch dan foydalanib handle qilamiz => future global handling
 		// try {
 		console.log('Mutation: signup');
-		console.log('input:', input);
+		// console.log('input:', input);
 		return await this.memberService.signup(input);
 		// } catch (err) {
 		// 	console.log('Error, signup:', err);
