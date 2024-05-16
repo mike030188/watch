@@ -1,8 +1,11 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MemberService } from './member.service';
-import { InternalServerErrorException, UsePipes, ValidationPipe } from '@nestjs/common';
+import { InternalServerErrorException, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
 import { Member } from '../../libs/dto/member/member';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { AuthMember } from '../auth/decorators/authMember.decorator';
+import { ObjectId } from 'mongoose';
 
 @Resolver()
 export class MemberResolver {
@@ -10,6 +13,7 @@ export class MemberResolver {
 
 	@Mutation(() => Member) // GraphQL ham 'Member'ni qaytariwi kk
 	// @UsePipes(ValidationPipe) // method type pipe-validation => switch to GlobalPipe-validation(main.ts)
+	// below @Args -> param decorator
 	public async signup(@Args('input') input: MemberInput): Promise<Member> {
 		// vaqtinchalik try/catch dan foydalanib handle qilamiz => future global handling
 		// try {
@@ -35,10 +39,22 @@ export class MemberResolver {
 	}
 
 	// Authenticated (ixtiyoriy memberlar iwlata oladi)
+	@UseGuards(AuthGuard) // murojaatchini tekshiriw
 	@Mutation(() => String)
-	public async updateMember(): Promise<string> {
+	public async updateMember(@AuthMember('_id') memberId: ObjectId): Promise<string> {
 		console.log('Mutation: updateMember');
+		// console.log(typeof memberId);
+		// console.log(memberId); // ixtiyoriy nom (authMember yoki data)
 		return this.memberService.updateMember();
+	}
+
+	/**TEST ushun **/
+	@UseGuards(AuthGuard)
+	@Query(() => String)
+	public async checkAuth(@AuthMember('memberNick') memberNick: string): Promise<string> {
+		console.log('Query: checkAuth');
+		console.log('memberNick:', memberNick);
+		return `Hi ${memberNick}`;
 	}
 
 	@Query(() => String)
