@@ -9,6 +9,7 @@ import { ObjectId } from 'mongoose';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { MemberType } from '../../libs/enums/member.enum';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { MemberUpdate } from '../../libs/dto/member/member.update';
 
 @Resolver()
 export class MemberResolver {
@@ -42,16 +43,6 @@ export class MemberResolver {
 		// }
 	}
 
-	// Authenticated (ixtiyoriy memberlar iwlata oladi)
-	@UseGuards(AuthGuard) // murojaatchini tekshiriw
-	@Mutation(() => String)
-	public async updateMember(@AuthMember('_id') memberId: ObjectId): Promise<string> {
-		console.log('Mutation: updateMember');
-		// console.log(typeof memberId);
-		// console.log(memberId); // ixtiyoriy nom (authMember yoki data)
-		return this.memberService.updateMember();
-	}
-
 	/**TEST ushun **/
 	@UseGuards(AuthGuard)
 	@Query(() => String)
@@ -73,6 +64,21 @@ export class MemberResolver {
 	// 	console.log('memberNick:', memberNick);
 	// 	return `Hi ${memberNick}`;
 	// }
+
+	// Authenticated (ixtiyoriy memberlar iwlata oladi)
+	@UseGuards(AuthGuard) // murojaatchini tekshiriw
+	@Mutation(() => Member)
+	public async updateMember(
+		@Args('input') input: MemberUpdate,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Member> {
+		console.log('Mutation: updateMember');
+		// console.log(typeof memberId);
+		// console.log(memberId); // ixtiyoriy nom (authMember yoki data)
+		// console.log(memberId); // murojaatchini aniqlash
+		delete input._id;
+		return this.memberService.updateMember(memberId, input);
+	}
 
 	@Query(() => String)
 	public async getMember(): Promise<string> {

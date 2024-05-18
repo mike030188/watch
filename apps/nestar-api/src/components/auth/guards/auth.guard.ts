@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
 			console.log('memberNick[auth] =>', authMember.memberNick);
 			request.body.authMember = authMember; // here middleware exec
 
-			return true;
+			return true; // authenticate bo`ldi, next processga o`tkaz
 		}
 
 		// description => http, rpc, gprs and etc are ignored
