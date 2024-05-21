@@ -139,7 +139,7 @@ export class MemberResolver {
 		const validMime = validMimeTypes.includes(mimetype);
 		if (!validMime) throw new Error(Message.PROVIDE_ALLOWED_FORMAT);
 
-		const imageName = getSerialForImage(filename);
+		const imageName = getSerialForImage(filename); // create random file name
 		const url = `uploads/${target}/${imageName}`;
 		const stream = createReadStream();
 
