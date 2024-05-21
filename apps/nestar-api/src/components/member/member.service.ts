@@ -68,7 +68,7 @@ export class MemberService {
 				{ new: true },
 			)
 			.exec();
-		if (!result) throw new InternalServerErrorException(Message.UPLOAD_FAILED);
+		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
 		result.accessToken = await this.authService.createToken(result); // accessToeknni yangilab olyapmiz
 		return result;
@@ -83,7 +83,7 @@ export class MemberService {
 				$in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
 			},
 		};
-		const targetMember = await this.memberModel.findOne(search).lean().exec(); // lean() => qiymat ozgartiriw un (doc -> js Objectga aylantirib beradi)
+		const targetMember = await this.memberModel.findOne(search).lean().exec(); // lean() => qiymat ozgartiriw un (Mongoose doc -> js Objectga aylantirib beradi)
 		if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		if (memberId) {
@@ -119,6 +119,7 @@ export class MemberService {
 				{ $match: match },
 				{ $sort: sort },
 				{
+					// facet => bir qancha aggregation (pipelines) 1joyda hosil qilib oliw
 					$facet: {
 						list: [{ $skip: (input.page - 1) * input.limit }, { $limit: input.limit }], // lookupAuthMemberLiked(memberId)
 						metaCounter: [{ $count: 'total' }],
@@ -138,7 +139,7 @@ export class MemberService {
 		const match: T = {}; // all members info
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC }; // => createdAt: -1 (yuqoridan pastga)
 
-		if (memberStatus) match.MemberStatus = memberStatus;
+		if (memberStatus) match.memberStatus = memberStatus;
 		if (memberType) match.memberType = memberType;
 		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
 		console.log('match:', match);
