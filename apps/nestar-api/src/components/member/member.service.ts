@@ -8,7 +8,7 @@ import { Direction, Message } from '../../libs/enums/common.enum';
 import { AuthService } from '../auth/auth.service';
 import { MemberUpdate } from '../../libs/dto/member/member.update';
 import { ViewService } from '../view/view.service';
-import { T } from '../../libs/types/common';
+import { StatisticModifier, T } from '../../libs/types/common';
 import { ViewGroup } from '../../libs/enums/view.enum';
 
 @Injectable()
@@ -168,5 +168,19 @@ export class MemberService {
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 		return result;
 		// return 'updateAllMembersByAdmin executed';
+	}
+
+	public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
+		console.log('executed');
+		const { _id, targetKey, modifier } = input;
+		return await this.memberModel
+			.findByIdAndUpdate(
+				_id,
+				{
+					$inc: { [targetKey]: modifier },
+				},
+				{ new: true },
+			)
+			.exec();
 	}
 }
