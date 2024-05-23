@@ -87,11 +87,11 @@ export class Property {
 	memberData?: Member;
 }
 
-// @ObjectType()
-// export class Properties {
-// 	@Field(() => [Property])
-// 	list: Property[];
+@ObjectType()
+export class Properties {
+	@Field(() => [Property])
+	list: Property[];
 
-// 	@Field(() => [TotalCounter], { nullable: true })
-// 	metaCounter: TotalCounter[];
-// }
+	@Field(() => [TotalCounter], { nullable: true })
+	metaCounter: TotalCounter[]; // propertieslar umimiy sonini taqdim etadi
+}
