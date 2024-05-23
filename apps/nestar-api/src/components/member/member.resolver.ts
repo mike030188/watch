@@ -141,7 +141,7 @@ export class MemberResolver {
 
 		const imageName = getSerialForImage(filename); // create random file name
 		const url = `uploads/${target}/${imageName}`;
-		const stream = createReadStream();
+		const stream = createReadStream(); // docs boyicha
 
 		const result = await new Promise((resolve, reject) => {
 			stream
@@ -170,6 +170,7 @@ export class MemberResolver {
 
 				const validMime = validMimeTypes.includes(mimetype);
 				if (!validMime) throw new Error(Message.PROVIDE_ALLOWED_FORMAT);
+				// TODO: SECURITY (NPM - HOW TO SECURE)
 
 				const imageName = getSerialForImage(filename);
 				const url = `uploads/${target}/${imageName}`;
