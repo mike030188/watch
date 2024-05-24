@@ -11,9 +11,9 @@ registerEnumType(PropertyType, {
 
 export enum PropertyStatus {
 	// HOLD = 'HOLD', // not use in Nestar
-	ACTIVE = 'ACTIVE',
-	SOLD = 'SOLD',
-	DELETE = 'DELETE',
+	ACTIVE = 'ACTIVE', // *user & *agent & *admin
+	SOLD = 'SOLD', // *agent & *admin
+	DELETE = 'DELETE', // *admin
 }
 registerEnumType(PropertyStatus, {
 	name: 'PropertyStatus',
