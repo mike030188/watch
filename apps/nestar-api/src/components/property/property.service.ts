@@ -151,6 +151,7 @@ export class PropertyService {
 		if (squaresRange) match.propertySquare = { $gte: squaresRange.start, $lte: squaresRange.end };
 
 		if (text) match.propertyTitle = { $regex: new RegExp(text, 'i') };
+		// Barter or rent qiliw mantigi
 		if (options) {
 			match['$or'] = options.map((ele) => {
 				return { [ele]: true };
@@ -178,7 +179,7 @@ export class PropertyService {
 							{ $skip: (input.page - 1) * input.limit },
 							{ $limit: input.limit },
 							lookupMember,
-							{ $unwind: '$memberData' },
+							{ $unwind: '$memberData' }, // memberData: memberDataValue_single data kelgani un
 						],
 						metaCounter: [{ $count: 'total' }],
 					},
@@ -208,7 +209,7 @@ export class PropertyService {
 							{ $skip: (input.page - 1) * input.limit },
 							{ $limit: input.limit }, // [property1, property2]
 							lookupMember, // memberData: [memberDataValue]
-							{ $unwind: '$memberData' }, // memberData: memberDataValue
+							{ $unwind: '$memberData' }, // memberData: memberDataValue_single data kelgani un
 						],
 						metaCounter: [{ $count: 'total' }],
 					},
