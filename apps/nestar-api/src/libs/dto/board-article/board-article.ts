@@ -53,5 +53,5 @@ export class BoardArticles {
 	list: BoardArticle[];
 
 	@Field(() => [TotalCounter], { nullable: true })
-	metaCounter: TotalCounter[];
+	metaCounter: TotalCounter[]; // aggregation listdan foydalanamiz
 }

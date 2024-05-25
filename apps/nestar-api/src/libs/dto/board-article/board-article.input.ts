@@ -4,6 +4,7 @@ import { ObjectId } from 'mongoose';
 import { BoardArticleCategory, BoardArticleStatus } from '../../enums/board-article.enum';
 import { Direction } from '../../enums/common.enum';
 
+// *frtEnddan => yuboriladigan InputTypelar
 @InputType()
 export class BoardArticleInput {
 	@IsNotEmpty()
@@ -22,9 +23,9 @@ export class BoardArticleInput {
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })
-	articleImage?: string;
+	articleImage?: string; // optional
 
-	memberId?: ObjectId;
+	memberId?: ObjectId; // Backend da hosil bolgan memberId
 }
 
 @InputType()
