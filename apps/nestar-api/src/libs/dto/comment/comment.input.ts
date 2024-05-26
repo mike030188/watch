@@ -20,7 +20,7 @@ export class CommentInput {
 
 	@IsNotEmpty()
 	@Field(() => String)
-	commentRefId: ObjectId;
+	commentRefId: ObjectId; // bu aynan qaysi id.ga comment yozyapmiz
 
 	memberId?: ObjectId;
 }
@@ -29,7 +29,7 @@ export class CommentInput {
 class CISearch {
 	@IsNotEmpty()
 	@Field(() => String)
-	commentRefId: ObjectId;
+	commentRefId: ObjectId; // bo`liwi mumkin: property, article...
 }
 
 @InputType()
