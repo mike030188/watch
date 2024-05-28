@@ -70,7 +70,7 @@ export class MemberResolver {
 	// 	return `Hi ${memberNick}`;
 	// }
 
-	// Authenticated (ixtiyoriy memberlar iwlata oladi)
+	// Authenticated bolgan memberlar iwlata oladi)
 	@UseGuards(AuthGuard) // murojaatchini tekshiriw
 	@Mutation(() => Member)
 	public async updateMember(
@@ -102,6 +102,17 @@ export class MemberResolver {
 	): Promise<Members> {
 		console.log('Query: getAgents');
 		return await this.memberService.getAgents(memberId, input);
+	}
+
+	@UseGuards(AuthGuard) // Auhtenticated member
+	@Mutation(() => Member)
+	public async likeTargetMember(
+		@Args('memberId') input: string, // qaysi memberga like bosmoqchimiz
+		@AuthMember('_id') memberId: ObjectId, // memberId
+	): Promise<Member> {
+		console.log('Mutation: likeTargetMember');
+		const likeRefId = shapeIntoMongoObjectId(input);
+		return await this.memberService.likeTargetMember(memberId, likeRefId);
 	}
 
 	/** ADMIN **/
