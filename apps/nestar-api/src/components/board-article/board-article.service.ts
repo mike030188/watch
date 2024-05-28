@@ -66,7 +66,7 @@ export class BoardArticleService {
 			// targetBoardArticle.meLiked = await this.likeService.checkLikeExistence(likeInput);
 		}
 
-		targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId);
+		targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId); // memberId page.ga kirmasdan view soni owmasligi un "null"
 		return targetBoardArticle;
 	}
 
