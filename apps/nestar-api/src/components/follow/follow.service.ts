@@ -87,8 +87,8 @@ export class FollowService {
 							lookupAuthMemberLiked(memberId, '$followingId'),
 							// meFollowed
 							lookupAuthMemberFollowed({
-								followerId: memberId,
-								followingId: '$followingId',
+								followerId: memberId, //David
+								followingId: '$followingId', // Shawn
 							}),
 							lookupFollowingData, // biz follow bo`lgan memberni to`liq malumotini olib beradi
 							{ $unwind: '$followingData' },

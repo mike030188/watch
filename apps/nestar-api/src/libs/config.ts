@@ -48,7 +48,7 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
 				},
 				{
 					$project: {
-						_id: 0,
+						_id: 0, // id.ni delete qilyapmiz
 						memberId: 1,
 						likeRefId: 1,
 						myFavorite: '$$localMyFavorite',
@@ -62,8 +62,8 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
 };
 
 interface LookupAuthMemberFollowed {
-	followerId: T;
-	followingId: string;
+	followerId: T; // David
+	followingId: string; // Shawn
 }
 
 export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => {
@@ -85,8 +85,9 @@ export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => {
 					},
 				},
 				{
+					// uzimiz qurib olamiz (DB ichida)
 					$project: {
-						_id: 0,
+						_id: 0, // id.ni delete qilyapmiz
 						followerId: 1,
 						followingId: 1,
 						myFollowing: '$$localMyFavorite',
@@ -123,5 +124,14 @@ export const lookupFollowerData = {
 		localField: 'followerId',
 		foreignField: '_id',
 		as: 'followerData',
+	},
+};
+
+export const lookupFavorite = {
+	$lookup: {
+		from: 'members',
+		localField: 'favoriteProperty.memberId',
+		foreignField: '_id',
+		as: 'favoriteProperty.memberData',
 	},
 };
