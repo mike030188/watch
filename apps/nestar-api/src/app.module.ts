@@ -8,6 +8,7 @@ import { AppResolver } from './app.resolver';
 import { ComponentsModule } from './components/components.module';
 import { DatabaseModule } from './database/database.module';
 import { T } from './libs/types/common';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
 	imports: [
@@ -31,7 +32,7 @@ import { T } from './libs/types/common';
 			},
 		}),
 		ComponentsModule, // asosiy mantiqlar shuyerga
-		DatabaseModule, // bu faqat 1ta iwga tuwvoliw un alohida qilindi
+		DatabaseModule, SocketModule, // bu faqat 1ta iwga tuwvoliw un alohida qilindi
 	],
 	// quyidagi mantiqlar serverimiz iwlayotganini TEST qiliw uchungina kk holos
 	controllers: [AppController],
