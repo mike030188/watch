@@ -32,7 +32,8 @@ import { SocketModule } from './socket/socket.module';
 			},
 		}),
 		ComponentsModule, // asosiy mantiqlar shuyerga
-		DatabaseModule, SocketModule, // bu faqat 1ta iwga tuwvoliw un alohida qilindi
+		DatabaseModule, // bu faqat 1ta iwga tuwvoliw un alohida qilindi
+		SocketModule, // online chatting real time
 	],
 	// quyidagi mantiqlar serverimiz iwlayotganini TEST qiliw uchungina kk holos
 	controllers: [AppController],
