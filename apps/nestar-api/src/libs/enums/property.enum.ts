@@ -10,7 +10,7 @@ registerEnumType(PropertyType, {
 });
 
 export enum PropertyStatus {
-	// HOLD = 'HOLD', // not use in Nestar
+	// HOLD = 'HOLD', // not use in Watch
 	ACTIVE = 'ACTIVE', // *user & *agent & *admin
 	SOLD = 'SOLD', // *agent & *admin
 	DELETE = 'DELETE', // *admin

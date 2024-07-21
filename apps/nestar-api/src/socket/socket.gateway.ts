@@ -3,7 +3,7 @@ import { OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } fr
 import { Server } from 'ws';
 import * as WebSocket from 'ws';
 import { AuthService } from '../components/auth/auth.service';
-import { Member } from 'apps/nestar-api/src/libs/dto/member/member';
+import { Member } from 'apps/watch-api/src/libs/dto/member/member';
 import * as url from 'url'; // node core package kelyapti
 
 /** FrtEndga => ma`lumot yuborish & qabul qilish un xizmat qiladigan interface yaratamiz - 1 */
