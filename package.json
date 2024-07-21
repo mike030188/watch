@@ -1,5 +1,5 @@
 {
-	"name": "watch",
+	"name": "watches",
 	"version": "0.0.1",
 	"description": "",
 	"author": "",
@@ -10,16 +10,16 @@
 		"format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
 		"start": "nest start",
 		"start:dev": "nest start --watch",
-		"start:dev:batch": "nest start watch-batch --watch",
+		"start:dev:batch": "nest start watches-batch --watch",
 		"start:debug": "nest start --debug --watch",
-		"start:prod": "NODE_ENV=production node dist/apps/watch-api/main",
-		"start:prod:batch": "node dist/apps/watch-batch/main",
+		"start:prod": "NODE_ENV=production node dist/apps/watches-api/main",
+		"start:prod:batch": "node dist/apps/watches-batch/main",
 		"lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
 		"test": "jest",
-		"test:watch": "jest --watch",
+		"test:watches": "jest --watch",
 		"test:cov": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-		"test:e2e": "jest --config ./apps/watch-api/test/jest-e2e.json"
+		"test:e2e": "jest --config ./apps/watches-api/test/jest-e2e.json"
 	},
 	"dependencies": {
 		"@apollo/server": "^4.9.5",

@@ -1,31 +1,31 @@
 {
 	"$schema": "https://json.schemastore.org/nest-cli",
 	"collection": "@nestjs/schematics",
-	"sourceRoot": "apps/watch-api/src",
+	"sourceRoot": "apps/watches-api/src",
 	"compilerOptions": {
 		"deleteOutDir": true,
 		"webpack": true,
-		"tsConfigPath": "apps/watch-api/tsconfig.app.json"
+		"tsConfigPath": "apps/watches-api/tsconfig.app.json"
 	},
 	"monorepo": true,
-	"root": "apps/watch-api",
+	"root": "apps/watches-api",
 	"projects": {
-		"watch-api": {
+		"watches-api": {
 			"type": "application",
-			"root": "apps/watch-api",
+			"root": "apps/watches-api",
 			"entryFile": "main",
-			"sourceRoot": "apps/watch-api/src",
+			"sourceRoot": "apps/watches-api/src",
 			"compilerOptions": {
-				"tsConfigPath": "apps/watch-api/tsconfig.app.json"
+				"tsConfigPath": "apps/watches-api/tsconfig.app.json"
 			}
 		},
-		"watch-batch": {
+		"watches-batch": {
 			"type": "application",
-			"root": "apps/watch-batch",
+			"root": "apps/watches-batch",
 			"entryFile": "main",
-			"sourceRoot": "apps/watch-batch/src",
+			"sourceRoot": "apps/watches-batch/src",
 			"compilerOptions": {
-				"tsConfigPath": "apps/watch-batch/tsconfig.app.json"
+				"tsConfigPath": "apps/watches-batch/tsconfig.app.json"
 			}
 		}
 	}
