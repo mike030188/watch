@@ -58,6 +58,14 @@ export class SocketGateway implements OnGatewayInit {
 		// client => authMember  key => value (save credentials) we can use ==> JS Map() method ==
 		this.clientsAuthMap.set(client, authMember); // client key orqali authMember value save qilyapmiz. clientsAuthMap = object
 
+		/** test:
+		 const fruits = new Map([
+		 	[client1, null], // [key, value]
+			[client2, MikeMember],
+			[client3, OscarMember]
+		 ])
+		 */
+
 		const clientNick: string = authMember?.memberNick ?? 'Guest';
 		this.logger.verbose(`Connection [${clientNick}] & total [${this.summaryClient}]`);
 
