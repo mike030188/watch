@@ -144,7 +144,8 @@ export class PropertyService {
 			typeList,
 			periodsRange,
 			pricesRange,
-			sizesRange,
+			sizesList,
+			categoriesList,
 			options,
 			text,
 		} = input.search;
@@ -153,10 +154,11 @@ export class PropertyService {
 		if (brandsList && brandsList.length) match.propertyBrand = { $in: brandsList };
 		if (colorsList && colorsList.length) match.propertyColor = { $in: colorsList };
 		if (typeList && typeList.length) match.propertyType = { $in: typeList };
+		if (sizesList && sizesList.length) match.propertySize = { $in: sizesList };
+		if (categoriesList && categoriesList.length) match.propertyCategory = { $in: categoriesList };
 
 		if (pricesRange) match.propertyPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
 		if (periodsRange) match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
-		if (sizesRange) match.propertySize = { $gte: sizesRange.start, $lte: sizesRange.end };
 
 		if (text) match.propertyModel = { $regex: new RegExp(text, 'i') };
 		// Barter or rent qiliw mantigi

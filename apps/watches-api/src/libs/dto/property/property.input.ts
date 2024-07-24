@@ -46,7 +46,9 @@ export class PropertyInput {
 	propertyPrice: number;
 
 	@IsNotEmpty()
-	@Field(() => Number)
+	@IsInt()
+	@Min(36)
+	@Field(() => Int)
 	propertySize: number;
 
 	@IsNotEmpty()
@@ -90,14 +92,14 @@ export class PricesRange {
 	end: number;
 }
 
-@InputType()
-export class SizeRange {
-	@Field(() => Int)
-	start: number;
+// @InputType()
+// export class SizeRange {
+// 	@Field(() => Int)
+// 	start: number;
 
-	@Field(() => Int)
-	end: number;
-}
+// 	@Field(() => Int)
+// 	end: number;
+// }
 
 @InputType()
 export class PeriodsRange {
@@ -156,8 +158,8 @@ class PISearch {
 	periodsRange?: PeriodsRange;
 
 	@IsOptional()
-	@Field(() => SizeRange, { nullable: true })
-	sizesRange?: SizeRange;
+	@Field(() => [Int], { nullable: true })
+	sizesList?: Number[];
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })
