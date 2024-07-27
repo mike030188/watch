@@ -2,7 +2,11 @@ import { registerEnumType } from '@nestjs/graphql';
 
 export enum NotificationType {
 	LIKE = 'LIKE',
+	PROPERTY = 'PROPERTY',
 	COMMENT = 'COMMENT',
+	SUBSCRIBE = 'SUBSCRIBE',
+	UNSUBSCRIBE = 'UNSUBSCRIBE',
+	MESSAGE = 'MESSAGE',
 }
 registerEnumType(NotificationType, {
 	name: 'NotificationType',
