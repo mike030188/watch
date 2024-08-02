@@ -3,6 +3,7 @@ import { ObjectId } from 'bson'; //"burak": mongoose edi
 export const availableAgentSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank'];
 export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews'];
 export const availableOptions = ['propertyBarter', 'propertyRent'];
+export const availableNoticeSorts = ['createdAt', 'updatedAt'];
 export const availablePropertySorts = [
 	'createdAt',
 	'updatedAt',
@@ -13,6 +14,8 @@ export const availablePropertySorts = [
 ];
 export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews'];
 export const availableCommentSorts = ['createdAt', 'updatedAt'];
+export const incomingNotification = ['createdAt'];
+export const availableMessageSorts = ['createdAt', 'updatedAt'];
 
 /** IMAGE CONFIGURATION **/
 import { v4 as uuidv4 } from 'uuid';
