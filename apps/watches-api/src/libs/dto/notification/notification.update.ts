@@ -4,7 +4,7 @@ import { ObjectId } from 'mongoose';
 import { NotificationStatus } from '../../enums/notification.enum';
 
 @InputType()
-export class PropertyUpdate {
+export class NotificationUpdate {
 	@IsNotEmpty()
 	@Field(() => String)
 	_id: ObjectId; // qaysi notification yangilayotganimizni _id orqali yuboramiz

@@ -12,12 +12,19 @@ import {
 	lookupFollowingData,
 } from '../../libs/config';
 import { T } from '../../libs/types/common';
+import { Member } from '../../libs/dto/member/member';
+import { NotificationService } from '../notification/notification.service';
+import { MemberStatus } from '../../libs/enums/member.enum';
+import { NotificationInput } from '../../libs/dto/notification/notification.input';
+import { NotificationGroup, NotificationStatus, NotificationType } from '../../libs/enums/notification.enum';
 
 @Injectable()
 export class FollowService {
 	constructor(
 		@InjectModel('Follow') private readonly followModel: Model<Follower | Following>,
+		@InjectModel('Member') private readonly memberModel: Model<Member>,
 		private readonly memberService: MemberService,
+		private notificationService: NotificationService,
 	) {}
 
 	public async subscribe(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
@@ -31,6 +38,25 @@ export class FollowService {
 
 		/** Subscribtionni ro`yhatdan o`tkazyapmiz **/
 		const result = await this.registerSubscription(followerId, followingId);
+
+		/* NOTIFICATION for subscribtion */
+		const authMember: Member = await this.memberModel
+			.findOne({ _id: followerId, memberStatus: MemberStatus.ACTIVE })
+			.exec();
+
+		if (!authMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+		const notificationInput: NotificationInput = {
+			notificationType: NotificationType.SUBSCRIBE,
+			notificationStatus: NotificationStatus.WAIT,
+			notificationGroup: NotificationGroup.ARTICLE,
+			notificationTitle: 'Follow',
+			notificationDesc: `${authMember.memberNick} followed you!`,
+			authorId: followerId,
+			receiverId: followingId,
+			// propertyId: likeRefId,
+		};
+		await this.notificationService.createNotification(notificationInput);
 
 		await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: 1 });
 		await this.memberService.memberStatsEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: 1 });
@@ -62,6 +88,26 @@ export class FollowService {
 				followerId: followerId,
 			})
 			.exec();
+
+		/* NOTIFICATION for unsubscribe */
+		const authMember: Member = await this.memberModel
+			.findOne({ _id: followerId, memberStatus: MemberStatus.ACTIVE })
+			.exec();
+
+		if (!authMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+		const notificationInput: NotificationInput = {
+			notificationType: NotificationType.UNSUBSCRIBE,
+			notificationStatus: NotificationStatus.WAIT,
+			notificationGroup: NotificationGroup.ARTICLE,
+			notificationTitle: 'Follow',
+			notificationDesc: `${authMember.memberNick} unfollowed you!`,
+			authorId: followerId,
+			receiverId: followingId,
+			// propertyId: likeRefId,
+		};
+		await this.notificationService.createNotification(notificationInput);
+
 		if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: -1 });

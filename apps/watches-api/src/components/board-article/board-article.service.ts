@@ -18,14 +18,21 @@ import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../
 import { LikeService } from '../like/like.service';
 import { LikeInput } from '../../libs/dto/like/like.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
+import { Member } from '../../libs/dto/member/member';
+import { NotificationService } from '../notification/notification.service';
+import { NotificationInput } from '../../libs/dto/notification/notification.input';
+import { NotificationGroup, NotificationStatus, NotificationType } from '../../libs/enums/notification.enum';
+import { MemberStatus } from '../../libs/enums/member.enum';
 
 @Injectable()
 export class BoardArticleService {
 	constructor(
 		@InjectModel('BoardArticle') private readonly boardArticleModel: Model<BoardArticle>,
+		@InjectModel('Member') private readonly memberModel: Model<Member>,
 		private readonly memberService: MemberService,
 		private readonly viewService: ViewService,
 		private readonly likeService: LikeService,
+		private notificationService: NotificationService,
 	) {}
 
 	public async createBoardArticle(memberId: ObjectId, input: BoardArticleInput): Promise<BoardArticle> {
@@ -150,6 +157,22 @@ export class BoardArticleService {
 			targetKey: 'articleLikes',
 			modifier: modifier,
 		});
+
+		const authMember: Member = await this.memberModel.findOne({ _id: memberId, memberStatus: MemberStatus.ACTIVE });
+
+		if (!authMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+		const notificationInput: NotificationInput = {
+			notificationType: NotificationType.LIKE,
+			notificationStatus: NotificationStatus.WAIT,
+			notificationGroup: NotificationGroup.ARTICLE,
+			notificationTitle: 'New Like',
+			notificationDesc: `${authMember.memberNick} liked your article ${target.articleTitle}`,
+			authorId: memberId,
+			receiverId: target.memberId,
+			articleId: likeRefId,
+		};
+		await this.notificationService.createNotification(notificationInput);
 
 		if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
 		return result;

@@ -11,14 +11,25 @@ import { CommentUpdate } from '../../libs/dto/comment/comment.update';
 import { Comments, Comment } from '../../libs/dto/comment/comment';
 import { T } from '../../libs/types/common';
 import { lookupMember } from '../../libs/config';
+import { Member } from '../../libs/dto/member/member';
+import { MemberStatus } from '../../libs/enums/member.enum';
+import { Property } from '../../libs/dto/property/property';
+import { BoardArticle } from '../../libs/dto/board-article/board-article';
+import { NotificationInput } from '../../libs/dto/notification/notification.input';
+import { NotificationGroup, NotificationStatus, NotificationType } from '../../libs/enums/notification.enum';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class CommentService {
 	constructor(
 		@InjectModel('Comment') private readonly commentModel: Model<Comment>, // yangi hosil bo`ladigan "Comment"ni qaytaryapti
+		@InjectModel('Property') private readonly propertyModel: Model<Property>,
+		@InjectModel('Member') private readonly memberModel: Model<Member>,
+		@InjectModel('BoardArticle') private readonly boardArticleModel: Model<BoardArticle>,
 		private readonly memberService: MemberService,
 		private readonly propertyService: PropertyService,
 		private readonly boardArticleService: BoardArticleService,
+		private notificationService: NotificationService,
 	) {}
 
 	public async createComment(memberId: ObjectId, input: CommentInput): Promise<Comment> {
@@ -39,13 +50,58 @@ export class CommentService {
 					targetKey: 'propertyComments',
 					modifier: 1,
 				});
+				// notification logic
+				const property = await this.propertyModel.findOne({ _id: input.commentRefId }).exec();
+				if (property) {
+					const authMember: Member = await this.memberModel
+						.findOne({ _id: memberId, memberStatus: MemberStatus.ACTIVE })
+						.exec();
+
+					if (!authMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+					const notificationInput: NotificationInput = {
+						notificationType: NotificationType.COMMENT,
+						notificationStatus: NotificationStatus.WAIT,
+						notificationGroup: NotificationGroup.PROPERTY,
+						notificationTitle: 'New Comment',
+						notificationDesc: `${authMember.memberNick} commented on your product ${property.propertyModel}`,
+						authorId: memberId,
+						receiverId: property.memberId,
+						propertyId: input.commentRefId,
+					};
+					await this.notificationService.createNotification(notificationInput);
+				}
+
 				break;
+
 			case CommentGroup.ARTICLE:
 				await this.boardArticleService.boardArticleStatsEditor({
 					_id: input.commentRefId,
 					targetKey: 'articleComments',
 					modifier: 1,
 				});
+				// notification logic
+				const article = await this.boardArticleModel.findOne({ _id: input.commentRefId }).exec();
+				if (article) {
+					const authMember: Member = await this.memberModel
+						.findOne({ _id: memberId, memberStatus: MemberStatus.ACTIVE })
+						.exec();
+
+					if (!authMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+					const notificationInput: NotificationInput = {
+						notificationType: NotificationType.COMMENT,
+						notificationStatus: NotificationStatus.WAIT,
+						notificationGroup: NotificationGroup.ARTICLE,
+						notificationTitle: 'New Comment',
+						notificationDesc: `${authMember.memberNick} commented on your article ${article.articleTitle}`,
+						authorId: memberId,
+						receiverId: article.memberId,
+						propertyId: input.commentRefId,
+					};
+					await this.notificationService.createNotification(notificationInput);
+				}
+
 				break;
 			case CommentGroup.MEMBER:
 				await this.memberService.memberStatsEditor({
@@ -53,6 +109,21 @@ export class CommentService {
 					targetKey: 'memberComments',
 					modifier: 1,
 				});
+				// notification logic
+				const member = await this.memberModel.findOne({ _id: input.commentRefId }).exec();
+				if (member) {
+					const notificationInput: NotificationInput = {
+						notificationType: NotificationType.COMMENT,
+						notificationStatus: NotificationStatus.WAIT,
+						notificationGroup: NotificationGroup.MEMBER,
+						notificationTitle: 'New Comment',
+						notificationDesc: `${member.memberNick} commented on your ${member.memberProperties}`,
+						authorId: memberId,
+						receiverId: article.memberId,
+					};
+					await this.notificationService.createNotification(notificationInput);
+				}
+
 				break;
 		}
 
