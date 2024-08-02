@@ -4,7 +4,7 @@ import { ObjectId } from 'mongoose';
 import { NoticeStatus, NoticeType } from '../../enums/notice.enum';
 
 @InputType()
-export class NoticeUpdateDto {
+export class NoticeUpdate {
 	@IsNotEmpty()
 	@Field(() => String)
 	_id: ObjectId;

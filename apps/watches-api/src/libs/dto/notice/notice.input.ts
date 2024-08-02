@@ -20,11 +20,11 @@ export class NoticeInput {
 	@Field(() => NoticeStatus, { nullable: true })
 	noticeStatus?: NoticeStatus;
 
-	memberId?: ObjectId;
+	memberId?: ObjectId; // Authenticaion dan memberId qabul qilamiz
 }
 
 @InputType()
-export class NoticeInquiryDto {
+export class NoticeInquiry {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
