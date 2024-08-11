@@ -4,7 +4,7 @@ import { ObjectId } from 'mongoose';
 import { Member, TotalCounter } from '../member/member';
 
 @ObjectType()
-export class Message {
+export class MessageDto {
 	@Field(() => String)
 	_id: ObjectId;
 
@@ -46,8 +46,8 @@ export class Message {
 
 @ObjectType()
 export class Messages {
-	@Field(() => [Message])
-	list: Message[];
+	@Field(() => [MessageDto])
+	list: MessageDto[];
 
 	@Field(() => [TotalCounter], { nullable: true })
 	metaCounter: TotalCounter[];
