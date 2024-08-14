@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NoticeService } from './notice.service';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { MemberType } from '../../libs/enums/member.enum';
 import { UseGuards } from '@nestjs/common';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { Notice, Notices } from '../../libs/dto/notice/notice';
+import { NoticeInputDto, NoticeInquiryDto } from '../../libs/dto/notice/notice.input';
 import { AuthMember } from '../auth/decorators/authMember.decorator';
-import { NoticeInput, NoticeInquiry } from '../../libs/dto/notice/notice.input';
 import { ObjectId } from 'mongoose';
-import { NoticeUpdate } from '../../libs/dto/notice/notice.update';
+import { NoticeDto, NoticesDto } from '../../libs/dto/notice/notice';
+import { NoticeUpdateDto } from '../../libs/dto/notice/notice.update';
 import { shapeIntoMongoObjectId } from '../../libs/config';
 import { WithoutGuard } from '../auth/guards/without.guard';
 
@@ -19,8 +20,11 @@ export class NoticeResolver {
 	/** ADMIN **/
 	@Roles(MemberType.ADMIN, MemberType.AGENT)
 	@UseGuards(RolesGuard)
-	@Mutation((returns) => Notice)
-	public async createNotice(@Args('input') input: NoticeInput, @AuthMember('_id') memberId: ObjectId): Promise<Notice> {
+	@Mutation((returns) => NoticeDto)
+	public async createNotice(
+		@Args('input') input: NoticeInputDto,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<NoticeDto> {
 		console.log('Mutation: createNotice');
 		input.memberId = memberId;
 		const data = await this.noticeService.createNotice(input);
@@ -29,11 +33,11 @@ export class NoticeResolver {
 
 	@Roles(MemberType.ADMIN, MemberType.AGENT)
 	@UseGuards(RolesGuard)
-	@Mutation((returns) => Notice)
+	@Mutation((returns) => NoticeDto)
 	public async updateNotice(
-		@Args('input') input: NoticeUpdate,
+		@Args('input') input: NoticeUpdateDto,
 		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Notice> {
+	): Promise<NoticeDto> {
 		console.log('Mutation: updateNotice');
 		const data = await this.noticeService.updateNotice(memberId, input);
 		return data;
@@ -41,8 +45,8 @@ export class NoticeResolver {
 
 	@Roles(MemberType.ADMIN, MemberType.AGENT)
 	@UseGuards(RolesGuard)
-	@Mutation((returns) => Notice)
-	public async deleteNotice(@Args('input') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Notice> {
+	@Mutation((returns) => NoticeDto)
+	public async deleteNotice(@Args('input') input: string, @AuthMember('_id') memberId: ObjectId): Promise<NoticeDto> {
 		console.log('Mutation: deleteNotice');
 		const noticeId = shapeIntoMongoObjectId(input);
 		const data = await this.noticeService.deleteNotice(noticeId);
@@ -52,8 +56,8 @@ export class NoticeResolver {
 	/** CLIENT **/
 
 	@UseGuards(WithoutGuard)
-	@Query((returns) => Notice)
-	public async getNotice(@Args('input') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Notice> {
+	@Query((returns) => NoticeDto)
+	public async getNotice(@Args('input') input: string, @AuthMember('_id') memberId: ObjectId): Promise<NoticeDto> {
 		console.log('Query: getNotice');
 		const noticeId = shapeIntoMongoObjectId(input);
 		const data = this.noticeService.getNotice(noticeId);
@@ -62,13 +66,15 @@ export class NoticeResolver {
 	}
 
 	@UseGuards(WithoutGuard)
-	@Query((returns) => Notices)
+	@Query((returns) => NoticesDto)
 	public async getNotices(
-		@Args('input') input: NoticeInquiry,
+		@Args('input') input: NoticeInquiryDto,
 		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Notices> {
+	): Promise<NoticesDto> {
 		console.log('Query: getNotices');
+
 		const data = this.noticeService.getNotices(memberId, input);
+
 		return data;
 	}
 }

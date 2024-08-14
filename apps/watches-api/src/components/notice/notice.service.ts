@@ -1,36 +1,40 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Notice, Notices } from '../../libs/dto/notice/notice';
+import { NoticeDto, NoticesDto } from '../../libs/dto/notice/notice';
 import { Model, ObjectId } from 'mongoose';
-import { MemberService } from '../member/member.service';
-import { NoticeInput, NoticeInquiry } from '../../libs/dto/notice/notice.input';
+import { NoticeInputDto, NoticeInquiryDto } from '../../libs/dto/notice/notice.input';
 import { Message } from '../../libs/enums/common.enum';
-import { NoticeUpdate } from '../../libs/dto/notice/notice.update';
-import { NoticeStatus } from '../../libs/enums/notice.enum';
+import { NoticeUpdateDto } from '../../libs/dto/notice/notice.update';
 import { T } from '../../libs/types/common';
+import { MemberService } from '../member/member.service';
+import { NoticeStatus } from '../../libs/enums/notice.enum';
 
 @Injectable()
 export class NoticeService {
 	constructor(
-		@InjectModel('Notice') private readonly noticeModel: Model<Notice>,
+		@InjectModel('Notice') private readonly noticeModel: Model<NoticeDto>,
 		private memberService: MemberService,
 	) {}
 
-	/** ADMIN **/
-	public async createNotice(input: NoticeInput): Promise<Notice> {
+	public async createNotice(input: NoticeInputDto): Promise<NoticeDto> {
 		try {
-			const result = await this.noticeModel.create(input);
+			const result: any = await this.noticeModel.create(input);
+
+			// await this.memberService.memberStatsEditor({ _id: result.memberId, targetKey: 'memberNotices', modifier: 1 });
+			// if (!result) throw new InternalServerErrorException(Message.CREATE_FAILED);
 
 			return result;
-		} catch (err) {
-			console.log('Error, Service.model:', err.message);
-			throw new BadRequestException(Message.CREATE_FAILED);
+		} catch (error) {
+			console.log('Error, Service.model', error.message);
+			throw new BadRequestException(Message.CREATE_FAILED); // bu error nestjsni error handling methodi bolsa, demak bu yerda errorni handle qilsak u bizning global error handlingmizni error messagega joylashadimi?
 		}
 	}
 
-	public async updateNotice(memberId: ObjectId, input: NoticeUpdate): Promise<Notice> {
-		const result: Notice = await this.noticeModel
-			.findOneAndUpdate({ _id: input._id, memberId: memberId }, input, { new: true })
+	public async updateNotice(memberId: ObjectId, input: NoticeUpdateDto): Promise<NoticeDto> {
+		const result: NoticeDto = await this.noticeModel
+			.findOneAndUpdate({ _id: input._id, memberId: memberId }, input, {
+				new: true,
+			})
 			.exec();
 
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
@@ -38,25 +42,23 @@ export class NoticeService {
 		return result;
 	}
 
-	public async deleteNotice(noticeId: ObjectId): Promise<Notice> {
-		const result: Notice = await this.noticeModel.findOneAndDelete(noticeId).exec();
+	public async deleteNotice(noticeId: ObjectId): Promise<NoticeDto> {
+		const result: NoticeDto = await this.noticeModel.findOneAndDelete(noticeId).exec();
 
 		if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
 
 		return result;
 	}
 
-	/** Client **/
-
-	public async getNotice(noticeId: ObjectId): Promise<Notice> {
-		const result: Notice = await this.noticeModel.findOne(noticeId).exec();
+	public async getNotice(noticeId: ObjectId): Promise<NoticeDto> {
+		const result: NoticeDto = await this.noticeModel.findOne(noticeId).exec();
 
 		if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		return result;
 	}
 
-	public async getNotices(memberId: ObjectId, input: NoticeInquiry): Promise<Notices> {
+	public async getNotices(memberId: ObjectId, input: NoticeInquiryDto): Promise<NoticesDto> {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { noticeType } = input;
 
@@ -79,8 +81,8 @@ export class NoticeService {
 
 		const noticesResult = result[0];
 
-		const notices: Notices = {
-			list: noticesResult.list.map((item: Notice) => ({
+		const noticesDto: NoticesDto = {
+			list: noticesResult.list.map((item: NoticeDto) => ({
 				_id: item._id,
 				noticeContent: item.noticeContent,
 				noticeType: item.noticeType,
@@ -92,6 +94,6 @@ export class NoticeService {
 			metaCounter: noticesResult.metaCounter,
 		};
 
-		return notices;
+		return noticesDto;
 	}
 }

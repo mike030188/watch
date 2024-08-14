@@ -4,7 +4,7 @@ import { NoticeStatus, NoticeType } from '../../enums/notice.enum';
 import { Member, TotalCounter } from '../member/member';
 
 @ObjectType()
-export class Notice {
+export class NoticeDto {
 	@Field(() => String)
 	_id: ObjectId;
 
@@ -17,9 +17,6 @@ export class Notice {
 	@Field(() => NoticeStatus)
 	noticeStatus: NoticeStatus;
 
-	@Field(() => String, { nullable: true })
-	memberId?: ObjectId;
-
 	@Field(() => Member, { nullable: true })
 	memberData?: Member;
 
@@ -31,9 +28,9 @@ export class Notice {
 }
 
 @ObjectType()
-export class Notices {
-	@Field(() => [Notice])
-	list: Notice[];
+export class NoticesDto {
+	@Field(() => [NoticeDto])
+	list: NoticeDto[];
 
 	@Field(() => [TotalCounter], { nullable: true })
 	metaCounter: TotalCounter[];

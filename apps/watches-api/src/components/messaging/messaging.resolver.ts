@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { MessageService } from './message.service';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { MessageDto, Messages } from '../../libs/dto/message/message';
-import { MessageInput, MessagesInquiry } from '../../libs/dto/message/message.input';
 import { AuthMember } from '../auth/decorators/authMember.decorator';
 import { ObjectId } from 'mongoose';
-import { MessageUpdate } from '../../libs/dto/message/message.update';
 import { shapeIntoMongoObjectId } from '../../libs/config';
 import { WithoutGuard } from '../auth/guards/without.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { MessageInputDto, MessagesInquiryDto } from '../../libs/dto/message/message.input';
+import { MessageUpdateDto } from '../../libs/dto/message/message.update';
+import { MessageService } from './messaging.service';
+import { MessageDto, MessagesDto } from '../../libs/dto/message/message';
 
 @Resolver()
 export class MessageResolver {
@@ -18,7 +19,7 @@ export class MessageResolver {
 	@UseGuards(AuthGuard)
 	@Mutation((returns) => MessageDto)
 	public async createMessage(
-		@Args('input') input: MessageInput,
+		@Args('input') input: MessageInputDto,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<MessageDto> {
 		console.log('Mutation: createMessage ');
@@ -27,7 +28,7 @@ export class MessageResolver {
 
 	@Mutation((returns) => MessageDto)
 	public async updateMessage(
-		@Args('input') input: MessageUpdate,
+		@Args('input') input: MessageUpdateDto,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<MessageDto> {
 		console.log('Mutation: updateComment ');
@@ -36,11 +37,11 @@ export class MessageResolver {
 	}
 
 	@UseGuards(WithoutGuard)
-	@Query((returns) => Messages)
+	@Query((returns) => MessagesDto)
 	public async getMessages(
-		@Args('input') input: MessagesInquiry,
+		@Args('input') input: MessagesInquiryDto,
 		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Messages> {
+	): Promise<MessagesDto> {
 		console.log('Mutation: getComments ');
 		input.search.messageRefId = shapeIntoMongoObjectId(input.search.messageRefId);
 		return await this.messageService.getMessages(memberId, input);

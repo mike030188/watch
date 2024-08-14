@@ -6,7 +6,7 @@ import { MessageGroup } from '../../enums/message.enum';
 import { ObjectId } from 'mongoose';
 
 @InputType()
-export class MessageInput {
+export class MessageInputDto {
 	@IsOptional()
 	@Field(() => MessageGroup, { nullable: true })
 	messageGroup?: MessageGroup;
@@ -43,7 +43,7 @@ class MSISearch {
 }
 
 @InputType()
-export class MessagesInquiry {
+export class MessagesInquiryDto {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)

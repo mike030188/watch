@@ -10,7 +10,7 @@ import { BoardArticleModule } from './board-article/board-article.module';
 import { NotificationModule } from './notification/notification.module';
 import { NoticeModule } from './notice/notice.module';
 import { FaqModule } from './faq/faq.module';
-import { MessageModule } from './message/message.module';
+import { MessageModule } from './messaging/messaging.module';
 
 @Module({
 	imports: [

@@ -6,7 +6,7 @@ import { Direction } from '../../enums/common.enum';
 import { availableNoticeSorts } from '../../config';
 
 @InputType()
-export class NoticeInput {
+export class NoticeInputDto {
 	@IsNotEmpty()
 	@Field(() => NoticeType)
 	noticeType: NoticeType;
@@ -16,15 +16,14 @@ export class NoticeInput {
 	@Field(() => String)
 	noticeContent: string;
 
-	@IsOptional()
 	@Field(() => NoticeStatus, { nullable: true })
 	noticeStatus?: NoticeStatus;
 
-	memberId?: ObjectId; // Authenticaion dan memberId qabul qilamiz
+	memberId?: ObjectId;
 }
 
 @InputType()
-export class NoticeInquiry {
+export class NoticeInquiryDto {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)

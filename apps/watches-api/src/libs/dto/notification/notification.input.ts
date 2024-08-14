@@ -1,57 +1,45 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
-import { NotificationGroup, NotificationStatus, NotificationType } from '../../enums/notification.enum';
+import { IsEnum, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 import { ObjectId } from 'mongoose';
+import { NotificationGroup, NotificationStatus, NotificationType } from '../../enums/notification.enum';
 import { Direction } from '../../enums/common.enum';
 
 @InputType()
 export class NotificationInput {
 	@IsNotEmpty()
-	@Field(() => NotificationType)
+	@IsEnum(NotificationType)
 	notificationType: NotificationType;
 
-	@IsNotEmpty()
-	@Field(() => NotificationStatus, { defaultValue: NotificationStatus.WAIT })
+	@IsOptional()
+	@IsEnum(NotificationStatus)
 	notificationStatus: NotificationStatus;
 
 	@IsNotEmpty()
-	@Field(() => NotificationGroup)
+	@IsEnum(NotificationGroup)
 	notificationGroup: NotificationGroup;
 
 	@IsNotEmpty()
-	@Length(3, 100)
-	@Field(() => String)
+	@IsString()
 	notificationTitle: string;
 
 	@IsOptional()
-	@Length(5, 500)
-	@Field(() => String, { nullable: true })
-	notificationDesc?: string;
+	@IsString()
+	notificationDesc: string;
 
-	@IsNotEmpty()
-	@Field(() => String)
 	authorId: ObjectId;
 
-	@IsNotEmpty()
-	@Field(() => String)
 	receiverId: ObjectId;
 
-	@IsOptional()
-	@Field(() => String, { nullable: true })
 	propertyId?: ObjectId;
 
-	@IsOptional()
-	@Field(() => String, { nullable: true })
 	articleId?: ObjectId;
 }
 
 @InputType()
 class NISearch {
-	@IsNotEmpty()
-	@Field(() => String)
-	receiverId: ObjectId;
+	@Field(() => String, { nullable: true })
+	receiverId?: string;
 }
-
 @InputType()
 export class NotificationsInquiry {
 	@IsNotEmpty()
@@ -68,7 +56,7 @@ export class NotificationsInquiry {
 	@Field(() => Direction, { nullable: true })
 	direction?: Direction;
 
-	@IsNotEmpty()
-	@Field(() => NISearch)
-	search: NISearch;
+	@IsOptional()
+	@Field(() => NISearch, { nullable: true })
+	search?: NISearch;
 }

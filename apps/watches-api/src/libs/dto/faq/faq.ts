@@ -4,7 +4,7 @@ import { Member, TotalCounter } from '../member/member';
 import { FaqStatus, FaqType } from '../../enums/faq.enum';
 
 @ObjectType()
-export class Faq {
+export class FaqDto {
 	@Field(() => String)
 	_id: ObjectId;
 
@@ -31,9 +31,9 @@ export class Faq {
 }
 
 @ObjectType()
-export class Faqs {
-	@Field(() => [Faq])
-	list: Faq[];
+export class FaqsDto {
+	@Field(() => [FaqDto])
+	list: FaqDto[];
 
 	@Field(() => [TotalCounter], { nullable: true })
 	metaCounter: TotalCounter[];

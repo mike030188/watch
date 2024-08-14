@@ -4,29 +4,41 @@ import { NotificationGroup, NotificationStatus, NotificationType } from '../../e
 import { Member, TotalCounter } from '../member/member';
 
 @ObjectType()
-export class Notification {
+export class MeNotified {
+	@Field()
+	authorId: ObjectId;
+
+	@Field()
+	notificationRefId: ObjectId;
+
+	@Field(() => Boolean)
+	myNotification: boolean;
+}
+
+@ObjectType()
+export class NotificDto {
 	@Field(() => String)
 	_id: ObjectId;
 
-	@Field(() => NotificationType)
-	notificationType: NotificationType;
+	@Field(() => NotificationType, { nullable: true })
+	notificationType?: NotificationType;
 
-	@Field(() => NotificationStatus)
-	notificationStatus: NotificationStatus;
+	@Field(() => NotificationStatus, { nullable: true })
+	notificationStatus?: NotificationStatus;
 
-	@Field(() => NotificationGroup)
-	notificationGroup: NotificationGroup;
+	@Field(() => NotificationGroup, { nullable: true })
+	notificationGroup?: NotificationGroup;
 
-	@Field(() => String)
+	@Field()
 	notificationTitle: string;
 
-	@Field(() => String, { nullable: true })
+	@Field()
 	notificationDesc?: string;
 
-	@Field(() => String)
+	@Field()
 	authorId: string;
 
-	@Field(() => String)
+	@Field()
 	receiverId: string;
 
 	@Field(() => String, { nullable: true })
@@ -35,17 +47,15 @@ export class Notification {
 	@Field(() => String, { nullable: true })
 	articleId?: string;
 
-	/** from aggregation **/
-
 	@Field(() => Member, { nullable: true })
 	memberData?: Member;
 }
 
 @ObjectType()
 export class Notifications {
-	@Field(() => [Notification])
-	list: Notification[];
+	@Field(() => [NotificDto])
+	list: NotificDto[];
 
 	@Field(() => [TotalCounter], { nullable: true })
-	metaCounter: TotalCounter[]; // propertieslar umimiy sonini taqdim etadi
+	metaCounter: TotalCounter[];
 }

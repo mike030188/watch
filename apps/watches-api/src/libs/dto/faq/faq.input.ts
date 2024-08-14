@@ -4,7 +4,7 @@ import { FaqStatus, FaqType } from '../../enums/faq.enum';
 import { IsNotEmpty, Min, IsOptional, IsIn, Length } from 'class-validator';
 
 @InputType()
-export class FaqInput {
+export class FaqInputDto {
 	@IsNotEmpty()
 	@Length(8, 50)
 	@Field(() => String)
@@ -23,11 +23,11 @@ export class FaqInput {
 	@Field(() => FaqStatus, { nullable: true })
 	faqStatus?: FaqStatus;
 
-	memberId?: ObjectId; // Authenticaion dan memberId qabul qilamiz
+	memberId?: ObjectId;
 }
 
 @InputType()
-export class FaqInquiry {
+export class FaqInquiryDto {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)

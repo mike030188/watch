@@ -45,7 +45,7 @@ export class MessageDto {
 }
 
 @ObjectType()
-export class Messages {
+export class MessagesDto {
 	@Field(() => [MessageDto])
 	list: MessageDto[];
 

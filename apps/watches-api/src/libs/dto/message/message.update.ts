@@ -4,7 +4,7 @@ import { ObjectId } from 'mongoose';
 import { MessageStatus } from '../../enums/message.enum';
 
 @InputType()
-export class MessageUpdate {
+export class MessageUpdateDto {
 	@IsNotEmpty()
 	@Field(() => String)
 	_id: ObjectId;

@@ -1,16 +1,16 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
-import { MessageDto, Messages } from '../../libs/dto/message/message';
-import { Member } from '../../libs/dto/member/member';
 import { MemberService } from '../member/member.service';
-import { NotificationService } from '../notification/notification.service';
-import { MessageInput, MessagesInquiry } from '../../libs/dto/message/message.input';
-import { lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
-import { MessageGroup, MessageStatus } from '../../libs/enums/message.enum';
+import { Model, ObjectId } from 'mongoose';
 import { Direction, Message } from '../../libs/enums/common.enum';
-import { MessageUpdate } from '../../libs/dto/message/message.update';
 import { T } from '../../libs/types/common';
+import { lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
+import { NotificationService } from '../notification/notification.service';
+import { MessageInputDto, MessagesInquiryDto } from '../../libs/dto/message/message.input';
+import { MessageGroup, MessageStatus } from '../../libs/enums/message.enum';
+import { MessageUpdateDto } from '../../libs/dto/message/message.update';
+import { Member } from '../../libs/dto/member/member';
+import { MessageDto, MessagesDto } from '../../libs/dto/message/message';
 
 @Injectable()
 export class MessageService {
@@ -21,7 +21,7 @@ export class MessageService {
 		private readonly notificationService: NotificationService,
 	) {}
 
-	public async createMessage(memberId: ObjectId, input: MessageInput): Promise<MessageDto> {
+	public async createMessage(memberId: ObjectId, input: MessageInputDto): Promise<MessageDto> {
 		input.memberId = memberId;
 		const mesId = shapeIntoMongoObjectId(input.messageRefId);
 
@@ -50,7 +50,7 @@ export class MessageService {
 		return result;
 	}
 
-	public async updateMessage(memberId: ObjectId, input: MessageUpdate): Promise<MessageDto> {
+	public async updateMessage(memberId: ObjectId, input: MessageUpdateDto): Promise<MessageDto> {
 		const { _id } = input;
 		const result = await this.messageModel
 			.findByIdAndUpdate(
@@ -69,13 +69,13 @@ export class MessageService {
 		return result;
 	}
 
-	public async getMessages(memberId: ObjectId, input: MessagesInquiry): Promise<Messages> {
+	public async getMessages(memberId: ObjectId, input: MessagesInquiryDto): Promise<MessagesDto> {
 		const { messageRefId } = input.search;
 		const match: T = { messageRefId: messageRefId, messageStatus: MessageStatus.ACTIVE };
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 		console.log('match', match);
 		console.log('sort', sort);
-		const result: Messages[] = await this.messageModel
+		const result: MessagesDto[] = await this.messageModel
 			.aggregate([
 				{ $match: match },
 				{ $sort: sort },

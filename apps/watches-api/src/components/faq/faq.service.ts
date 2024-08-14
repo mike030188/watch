@@ -1,31 +1,30 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Faq, Faqs } from '../../libs/dto/faq/faq';
 import { Model, ObjectId } from 'mongoose';
-import { FaqInput, FaqInquiry } from '../../libs/dto/faq/faq.input';
+import { FaqDto, FaqsDto } from '../../libs/dto/faq/faq';
+import { FaqInputDto, FaqInquiryDto } from '../../libs/dto/faq/faq.input';
 import { Message } from '../../libs/enums/common.enum';
-import { FaqUpdate } from '../../libs/dto/faq/faq.update';
 import { T } from '../../libs/types/common';
+import { FaqUpdateDto } from '../../libs/dto/faq/faq.update';
 
 @Injectable()
 export class FaqService {
-	constructor(@InjectModel('Faq') private readonly faqModel: Model<Faq>) {}
+	constructor(@InjectModel('Faq') private readonly faqModel: Model<FaqDto>) {}
 
-	/** ADMIN**/
-	public async createFaq(memberId: ObjectId, input: FaqInput): Promise<Faq> {
+	public async createFaq(memberId: ObjectId, input: FaqInputDto): Promise<FaqDto> {
 		input.memberId = memberId;
 
-		const result: Faq = await this.faqModel.create(input);
+		const result: FaqDto = await this.faqModel.create(input);
 
 		if (!result) throw new InternalServerErrorException(Message.CREATE_FAILED);
 
 		return result;
 	}
 
-	public async updateFaq(memberId: ObjectId, input: FaqUpdate): Promise<Faq> {
+	public async updateFaq(memberId: ObjectId, input: FaqUpdateDto): Promise<FaqDto> {
 		console.log(input, 'FAQ INPUT');
 
-		const result: Faq = await this.faqModel
+		const result: FaqDto = await this.faqModel
 			.findOneAndUpdate({ _id: input._id, memberId: memberId }, input, {
 				new: true,
 			})
@@ -36,25 +35,23 @@ export class FaqService {
 		return result;
 	}
 
-	public async deleteFaq(faqId: ObjectId): Promise<Faq> {
-		const result: Faq = await this.faqModel.findOneAndDelete(faqId).exec();
+	public async deleteFaq(faqId: ObjectId): Promise<FaqDto> {
+		const result: FaqDto = await this.faqModel.findOneAndDelete(faqId).exec();
 
 		if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
 
 		return result;
 	}
 
-	/** CLIENT **/
-
-	public async getFaq(faqId: ObjectId): Promise<Faq> {
-		const result: Faq = await this.faqModel.findOne(faqId).exec();
+	public async getFaq(faqId: ObjectId): Promise<FaqDto> {
+		const result: FaqDto = await this.faqModel.findOne(faqId).exec();
 
 		if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		return result;
 	}
 
-	public async getFaqs(memberId: ObjectId, input: FaqInquiry): Promise<Faqs> {
+	public async getFaqs(memberId: ObjectId, input: FaqInquiryDto): Promise<FaqsDto> {
 		const { faqType, faqStatus, text } = input;
 		const match: T = {};
 		if (faqType) {
@@ -86,8 +83,8 @@ export class FaqService {
 
 		const faqsResult = result[0];
 
-		const faqsDto: Faqs = {
-			list: faqsResult.list.map((item: Faq) => ({
+		const faqsDto: FaqsDto = {
+			list: faqsResult.list.map((item: FaqDto) => ({
 				_id: item._id,
 				faqQuestion: item.faqQuestion,
 				faqAnswer: item.faqAnswer,

@@ -1,16 +1,18 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { FaqService } from './faq.service';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { MemberType } from '../../libs/enums/member.enum';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { UseGuards } from '@nestjs/common';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { MemberType } from '../../libs/enums/member.enum';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { Faq, Faqs } from '../../libs/dto/faq/faq';
+import { FaqDto, FaqsDto } from '../../libs/dto/faq/faq';
+import { FaqInputDto, FaqInquiryDto } from '../../libs/dto/faq/faq.input';
 import { AuthMember } from '../auth/decorators/authMember.decorator';
-import { FaqInput, FaqInquiry } from '../../libs/dto/faq/faq.input';
 import { ObjectId } from 'mongoose';
-import { FaqUpdate } from '../../libs/dto/faq/faq.update';
+
 import { shapeIntoMongoObjectId } from '../../libs/config';
 import { WithoutGuard } from '../auth/guards/without.guard';
+import { FaqService } from './faq.service';
+import { FaqUpdateDto } from '../../libs/dto/faq/faq.update';
 
 @Resolver()
 export class FaqResolver {
@@ -19,8 +21,8 @@ export class FaqResolver {
 	/** ADMIN **/
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-	@Mutation((returns) => Faq)
-	public async createFaq(@Args('input') input: FaqInput, @AuthMember('_id') memberId: ObjectId): Promise<Faq> {
+	@Mutation((returns) => FaqDto)
+	public async createFaq(@Args('input') input: FaqInputDto, @AuthMember('_id') memberId: ObjectId): Promise<FaqDto> {
 		console.log('Mutation: createFaq');
 		console.log(input, '***************');
 
@@ -30,8 +32,8 @@ export class FaqResolver {
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-	@Mutation((returns) => Faq)
-	public async updateFaq(@Args('input') input: FaqUpdate, @AuthMember('_id') memberId: ObjectId): Promise<Faq> {
+	@Mutation((returns) => FaqDto)
+	public async updateFaq(@Args('input') input: FaqUpdateDto, @AuthMember('_id') memberId: ObjectId): Promise<FaqDto> {
 		console.log('Mutation: updateFaq');
 		const data = await this.faqService.updateFaq(memberId, input);
 		return data;
@@ -39,8 +41,8 @@ export class FaqResolver {
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-	@Mutation((returns) => Faq)
-	public async deleteFaq(@Args('input') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Faq> {
+	@Mutation((returns) => FaqDto)
+	public async deleteFaq(@Args('input') input: string, @AuthMember('_id') memberId: ObjectId): Promise<FaqDto> {
 		console.log('Mutation: deleteFaq');
 		const faqId = shapeIntoMongoObjectId(input);
 		const data = await this.faqService.deleteFaq(faqId);
@@ -50,8 +52,8 @@ export class FaqResolver {
 	/** CLIENT **/
 
 	@UseGuards(WithoutGuard)
-	@Query((returns) => Faq)
-	public async getFaq(@Args('input') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Faq> {
+	@Query((returns) => FaqDto)
+	public async getFaq(@Args('input') input: string, @AuthMember('_id') memberId: ObjectId): Promise<FaqDto> {
 		console.log('Query: getFaq');
 		const faqId = shapeIntoMongoObjectId(input);
 		const data = this.faqService.getFaq(faqId);
@@ -60,8 +62,8 @@ export class FaqResolver {
 	}
 
 	@UseGuards(WithoutGuard)
-	@Query((returns) => Faqs)
-	public async getFaqs(@Args('input') input: FaqInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Faqs> {
+	@Query((returns) => FaqsDto)
+	public async getFaqs(@Args('input') input: FaqInquiryDto, @AuthMember('_id') memberId: ObjectId): Promise<FaqsDto> {
 		console.log('Query: getFaqs');
 
 		const data = this.faqService.getFaqs(memberId, input);
