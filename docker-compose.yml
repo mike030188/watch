@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+  watches-api:
+    container_name: watches-api
+    restart: always
+    image: node:20.10.0
+    ports:
+      - 4001:8000
+    environment:
+      - PORT=4001
+    volumes:
+      - ./:/usr/src/watch
+    working_dir: /usr/src/watch
+    networks:
+      - monorepo-network
+    # FOR PRODUCTION
+    command: bash -c "npm install && npm run build && npm run start:prod"
+
+  watches-batch:
+    container_name: watches-batch
+    restart: unless-stopped
+    image: node:20.10.0
+    ports:
+      - 4002:8001
+    environment:
+      - PORT=4002
+    volumes:
+      - ./:/usr/src/watch
+    working_dir: /usr/src/watch
+    networks:
+      - monorepo-network
+    # FOR PRODUCTION
+    command: bash -c "rm -rf dist && npm install && npm run build && npm run start:prod:batch"
+
+networks:
+  monorepo-network:
+    driver: bridge
+# watch-next: localhost:4000 <=> container:3000
+# watches_api: localhost:4001 <=> container:8000
+# watches_batch: localhost:4002 <=> container:8001
