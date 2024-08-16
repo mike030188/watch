@@ -1,5 +1,3 @@
-version: '3.3'
-
 services:
   watches-api:
     container_name: watches-api
@@ -39,3 +37,9 @@ networks:
 # watch-next: localhost:4000 <=> container:3000
 # watches_api: localhost:4001 <=> container:8000
 # watches_batch: localhost:4002 <=> container:8001
+
+# docker compose up -d
+# docker compose stop
+# docker compose start
+# docker compose restart
+# docker compose stop && docker compose rm -f
