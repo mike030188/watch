@@ -1,6 +1,6 @@
 # !/bin/bash
 
-PRODUCTION (fazasi)
+# PRODUCTION (fazasi)
 git reset --hard
 git checkout master
 git pull origin master
